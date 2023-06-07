@@ -73,12 +73,14 @@ $secondary: #21ACAD;
     }
 
     &__ul{
+        
         @include recipeFlex();
         list-style-type: none;
         background-color: $primary;
         flex-direction: row;
         justify-content: flex-start;
         flex-wrap: wrap;
+        margin: 0;
 
         li{
             padding: 10px;
@@ -89,6 +91,10 @@ $secondary: #21ACAD;
                 margin: 10px
             }
         }
+    }
+
+    &__calculator{
+        @include recipeFlex();
     }
 
 }
