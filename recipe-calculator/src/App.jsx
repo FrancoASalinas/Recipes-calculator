@@ -15,7 +15,7 @@ export default function App() {
 function Main(){
   const [ingredients, setIngredients] = useState([]);
   const [calc, setCalc] = useState([]);
-  const [portions, setAmount] = useState('');
+  const [portions, setPortions] = useState('');
   const [forWhat, setForWhat] = useState('');
   const [desiredAmount, setDesiredAmount] = useState('');
 
@@ -28,7 +28,7 @@ function Main(){
         <li key={item.id}>{item.ingredient} {item.ingredientAmount * desiredAmount / portions}{item.ingredientMagnitude}<button onClick={() =>
           setCalc(
             calc.filter((a) => a !== item)
-          )}> Borrar </button></li>
+          )}> x </button></li>
           </>
           )
         })
@@ -43,12 +43,12 @@ function Main(){
   return(
     <>
       <main className="main">
-        <OriginalRecipe ingredients={ingredients} setIngredients={setIngredients} />
+        <OriginalRecipe ingredients={ingredients} setIngredients={setIngredients} setDesiredAmount={setDesiredAmount} setForWhat={setForWhat} setPortions={setPortions} />
         <div className="main__calculator">
           <label>Rinde para <input type="number" value={portions} 
           onChange={(e) => {
             if (e.target.value === '') return
-            setAmount(e.target.value)}}/></label>
+            setPortions(e.target.value)}}/></label>
           <label>(personas, porciones, etc)<input type="text" value={forWhat} onChange={(e) => setForWhat(e.target.value)}/></label>
           <label>Debe rendir para<input type="number" value={desiredAmount} onChange={(e) => setDesiredAmount(e.target.value)}/></label>
           <button onClick={() => {

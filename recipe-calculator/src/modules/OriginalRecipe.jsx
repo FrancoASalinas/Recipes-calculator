@@ -25,6 +25,15 @@ export default function OriginalRecipe(props){
               ]
             )
           }}>Añadir</button>
+          <button onClick={() => {
+            props.setIngredients([]);
+            setIngredient('');
+            setIngredientAmount('');
+            setIngredientMagnitude('');
+            props.setForWhat('');
+            props.setPortions('');
+            props.setDesiredAmount('');
+            props.setCalc([])}}>Borrar receta</button>
         </div>
       </div>
       <List />
@@ -37,7 +46,7 @@ export default function OriginalRecipe(props){
         <li key={nextId++}>{item.ingredient} {item.ingredientAmount} {item.ingredientMagnitude}<button onClick={() =>
           props.setIngredients(
             props.ingredients.filter((a) => a !== item)
-          )}> Borrar </button></li>
+          )}> x </button></li>
       )
       return(
         <ul className='main__ul'>
