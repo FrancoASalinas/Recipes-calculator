@@ -1,7 +1,8 @@
-import { useState } from 'react'
-import './App.scss'
-import OriginalRecipe from './modules/OriginalRecipe'
-import Header from './modules/Header'
+import { useState } from 'react';
+import './App.scss';
+import OriginalRecipe from './modules/OriginalRecipe';
+import Header from './modules/Header';
+import Main from './modules/Main';
 
 export default function App() {
   return (
@@ -9,59 +10,5 @@ export default function App() {
       <Header />
       <Main />
     </>
-  )
+  );
 }
-
-function Main(){
-  const [ingredients, setIngredients] = useState([]);
-  const [calc, setCalc] = useState([]);
-  const [portions, setPortions] = useState('');
-  const [forWhat, setForWhat] = useState('');
-  const [desiredAmount, setDesiredAmount] = useState('');
-
-  console.log(calc);
-
-  function NewRecipe(){
-    const listItem = calc.map((item) =>{
-        return (
-        <>
-        <li key={item.id}>{item.ingredient} {item.ingredientAmount * desiredAmount / portions}{item.ingredientMagnitude}<button onClick={() =>
-          setCalc(
-            calc.filter((a) => a !== item)
-          )}> x </button></li>
-          </>
-          )
-        })
-    return(
-      <>
-      <h2>{desiredAmount} {forWhat}</h2>
-      <ul className="main__ul">{listItem}</ul>
-      </>
-    )
-  }
-
-  return(
-    <>
-      <main className="main">
-        <OriginalRecipe ingredients={ingredients} setIngredients={setIngredients} setDesiredAmount={setDesiredAmount} setForWhat={setForWhat} setPortions={setPortions} />
-        <div className="main__calculator">
-          <label>Rinde para <input type="number" value={portions} 
-          onChange={(e) => {
-            if (e.target.value === '') return
-            setPortions(e.target.value)}}/></label>
-          <label>(personas, porciones, etc)<input type="text" value={forWhat} onChange={(e) => setForWhat(e.target.value)}/></label>
-          <label>Debe rendir para<input type="number" value={desiredAmount} onChange={(e) => setDesiredAmount(e.target.value)}/></label>
-          <button onClick={() => {
-            setCalc(ingredients.slice(0));
-          }}>Calcular</button>
-        </div>
-        <NewRecipe />
-      </main>
-    </>
-  )
-
-  
-
-}
-
-let nextId = 0;
