@@ -5,11 +5,12 @@ import {
   Typography,
 } from '@mui/material';
 
-function NewRecipe({ originalRecipe, conversion }) {
-  const Ingredients = originalRecipe.map((ingredient, i) => (
-    <li key={i}>
+function NewRecipe({ originalRecipe, multiplier, subject, originalNumber }) {
+  const Ingredients = originalRecipe.map((ingredient) => (
+    <li key={ingredient.name}>
       {ingredient.name}{' '}
-      {Number(ingredient.number) * Number(conversion.multiplier)}
+      {(Number(ingredient.number) * Number(multiplier)) /
+        Number(originalNumber)}
       {ingredient.magnitude}
     </li>
   ));
@@ -20,7 +21,7 @@ function NewRecipe({ originalRecipe, conversion }) {
       <Accordion>
         <AccordionSummary>
           <Typography>
-            Recipe name for {conversion.multiplier} {conversion.subject}
+            Recipe name for {Number(multiplier)} {subject}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>{Ingredients}</AccordionDetails>

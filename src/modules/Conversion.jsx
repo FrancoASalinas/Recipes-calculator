@@ -1,4 +1,5 @@
 import { Box, Button, TextField, Typography, styled } from '@mui/material';
+import { StyledTextField } from './StyledTextField';
 
 function Conversion({ onSubject, onMultiplier, onClick }) {
   return (
@@ -31,9 +32,5 @@ function Conversion({ onSubject, onMultiplier, onClick }) {
     </>
   );
 }
-
-const StyledTextField = styled(TextField)(({ theme }) => ({
-  margin: '.5rem',
-}));
 
 export default Conversion;

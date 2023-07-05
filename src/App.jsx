@@ -4,6 +4,7 @@ import VerticalLinearStepper from './modules/VerticalLinearStepper';
 import { useState } from 'react';
 import Conversion from './modules/Conversion';
 import NewRecipe from './modules/NewRecipe';
+import Basics from './modules/Basics';
 
 function App() {
   const [activeStep, setActiveStep] = useState(0);
@@ -13,7 +14,7 @@ function App() {
   const [magnitude, setMagnitude] = useState('');
   const [multiplier, setMultiplier] = useState('');
   const [subject, setSubject] = useState('');
-  const [conversion, setConversion] = useState([]);
+  const [originalNumber, setOriginalNumber] = useState('');
 
   const handleNext = () => {
     setActiveStep((prev) => prev + 1);
@@ -38,12 +39,12 @@ function App() {
         height="200px"
         borderRadius="20px"
         minHeight="28rem"
-        minWidth="80%"
+        minWidth="fit-content"
         padding="1rem"
         color="primary.main"
         display="grid"
         alignItems="center"
-        gridTemplateColumns="1fr 1fr"
+        gridTemplateColumns="repeat(2, minmax(20rem, 25rem))"
       >
         <VerticalLinearStepper
           onNext={handleNext}
@@ -52,6 +53,13 @@ function App() {
         />
         <Box display="flex" alignItems="center" flexDirection="column">
           {activeStep === 0 && (
+            <Basics
+              onSubject={(e) => setSubject(e.target.value)}
+              onOriginalNumber={(e) => setOriginalNumber(e.target.value)}
+              onMultiplier={(e) => setMultiplier(e.target.value)}
+            />
+          )}
+          {activeStep === 1 && (
             <Recipe
               onName={(e) => setName(e.target.value)}
               onNumber={(e) => setNumber(e.target.value)}
@@ -68,17 +76,12 @@ function App() {
               }}
             />
           )}
-          {activeStep === 1 && (
-            <Conversion
-              onMultiplier={(e) => setMultiplier(e.target.value)}
-              onSubject={(e) => setSubject(e.target.value)}
-              onClick={() => setConversion([{ multiplier, subject }])}
-            />
-          )}
           {activeStep === 2 && (
             <NewRecipe
-              conversion={conversion[0]}
               originalRecipe={originalRecipe}
+              multiplier={multiplier}
+              subject={subject}
+              originalNumber={originalNumber}
             />
           )}
         </Box>

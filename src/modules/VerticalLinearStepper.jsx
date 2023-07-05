@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 
 const steps = [
   {
-    label: 'Set the original recipe.',
+    label: 'Set the ingredients.',
     description: `Write your recipe adding all the ingredients you are given.`,
   },
   {

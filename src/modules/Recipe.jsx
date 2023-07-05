@@ -1,5 +1,7 @@
 import { Box, Button, TextField, Typography, styled } from '@mui/material';
 import { useState } from 'react';
+import { StyledTextField } from './StyledTextField';
+
 export default function Recipe({ onName, onNumber, onMagnitude, onClick }) {
   return (
     <>
@@ -40,6 +42,4 @@ export default function Recipe({ onName, onNumber, onMagnitude, onClick }) {
     </>
   );
 }
-const StyledTextField = styled(TextField)(({ theme }) => ({
-  margin: '.5rem',
-}));
+
