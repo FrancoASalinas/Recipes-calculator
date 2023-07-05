@@ -7,7 +7,13 @@ import NewRecipe from './modules/NewRecipe';
 
 function App() {
   const [activeStep, setActiveStep] = useState(0);
-  const [originalRecipe, setOriginalRecipe] = useState('');
+  const [originalRecipe, setOriginalRecipe] = useState([]);
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+  const [magnitude, setMagnitude] = useState('');
+  const [multiplier, setMultiplier] = useState('');
+  const [subject, setSubject] = useState('');
+  const [conversion, setConversion] = useState([]);
 
   const handleNext = () => {
     setActiveStep((prev) => prev + 1);
@@ -45,9 +51,36 @@ function App() {
           activeStep={activeStep}
         />
         <Box display="flex" alignItems="center" flexDirection="column">
-          {activeStep === 0 && <Recipe />}
-          {activeStep === 1 && <Conversion />}
-          {activeStep === 2 && <NewRecipe />}
+          {activeStep === 0 && (
+            <Recipe
+              onName={(e) => setName(e.target.value)}
+              onNumber={(e) => setNumber(e.target.value)}
+              onMagnitude={(e) => setMagnitude(e.target.value)}
+              onClick={() => {
+                setOriginalRecipe([
+                  ...originalRecipe,
+                  {
+                    name: name,
+                    number: number,
+                    magnitude: magnitude,
+                  },
+                ]);
+              }}
+            />
+          )}
+          {activeStep === 1 && (
+            <Conversion
+              onMultiplier={(e) => setMultiplier(e.target.value)}
+              onSubject={(e) => setSubject(e.target.value)}
+              onClick={() => setConversion([{ multiplier, subject }])}
+            />
+          )}
+          {activeStep === 2 && (
+            <NewRecipe
+              conversion={conversion[0]}
+              originalRecipe={originalRecipe}
+            />
+          )}
         </Box>
       </Box>
     </Box>
