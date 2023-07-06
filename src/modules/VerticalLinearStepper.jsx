@@ -10,13 +10,13 @@ import Typography from '@mui/material/Typography';
 
 const steps = [
   {
-    label: 'Set the ingredients.',
-    description: `Write your recipe adding all the ingredients you are given.`,
-  },
-  {
-    label: 'Set the conversion for the new recipe.',
+    label: 'Set the first parameters for the new recipe.',
     description:
       'Set the desired conversion, e.g.: for 20 people if the original recipe was for 4 people.',
+  },
+  {
+    label: 'Set the ingredients.',
+    description: `Write your recipe adding all the ingredients you are given.`,
   },
   {
     label: 'Enjoy!',

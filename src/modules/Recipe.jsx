@@ -1,24 +1,39 @@
-import { Box, Button, TextField, Typography, styled } from '@mui/material';
-import { useState } from 'react';
+import { Box, Button, Typography } from '@mui/material';
 import { StyledTextField } from './StyledTextField';
 
-export default function Recipe({ onName, onNumber, onMagnitude, onClick }) {
+export default function Recipe({
+  onName,
+  onNumber,
+  onMagnitude,
+  onClick,
+  onClear,
+  name,
+  magnitude,
+  number,
+}) {
   return (
     <>
       <Typography variant="h5" textAlign="center" marginBottom="2rem">
         Add ingredients to your new recipe
       </Typography>
-      <StyledTextField label="Ingredient name" onChange={onName} required />
+      <StyledTextField
+        label="Ingredient name"
+        onChange={onName}
+        required
+        value={name}
+      />
       <StyledTextField
         type="number"
         label="Number of Units"
         onChange={onNumber}
+        value={number}
         required
       />
       <StyledTextField
         label="Magnitude"
         placeholder="k, g, pounds"
         onChange={onMagnitude}
+        value={magnitude}
       />
       <Box display="flex" gap=".5rem">
         <Button
@@ -34,7 +49,7 @@ export default function Recipe({ onName, onNumber, onMagnitude, onClick }) {
             marginTop: '1rem',
           }}
           variant="contained"
-          onClick={onClick}
+          onClick={(onClick, onClear)}
         >
           Add Ingredient
         </Button>
@@ -42,4 +57,3 @@ export default function Recipe({ onName, onNumber, onMagnitude, onClick }) {
     </>
   );
 }
-

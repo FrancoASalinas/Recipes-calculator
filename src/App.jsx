@@ -1,8 +1,7 @@
-import { Box } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import Recipe from './modules/Recipe';
 import VerticalLinearStepper from './modules/VerticalLinearStepper';
 import { useState } from 'react';
-import Conversion from './modules/Conversion';
 import NewRecipe from './modules/NewRecipe';
 import Basics from './modules/Basics';
 
@@ -52,14 +51,14 @@ function App() {
           activeStep={activeStep}
         />
         <Box display="flex" alignItems="center" flexDirection="column">
-          {activeStep === 0 && (
+          <AnimatedBox activeStep={activeStep} step={0}>
             <Basics
               onSubject={(e) => setSubject(e.target.value)}
               onOriginalNumber={(e) => setOriginalNumber(e.target.value)}
               onMultiplier={(e) => setMultiplier(e.target.value)}
             />
-          )}
-          {activeStep === 1 && (
+          </AnimatedBox>
+          <AnimatedBox activeStep={activeStep} step={1}>
             <Recipe
               onName={(e) => setName(e.target.value)}
               onNumber={(e) => setNumber(e.target.value)}
@@ -74,20 +73,45 @@ function App() {
                   },
                 ]);
               }}
+              onClear={() => {
+                setName('');
+                setNumber('');
+                setMagnitude('');
+              }}
+              name={name}
+              number={number}
+              magnitude={magnitude}
             />
-          )}
-          {activeStep === 2 && (
+          </AnimatedBox>
+          <AnimatedBox activeStep={activeStep} step={2}>
             <NewRecipe
               originalRecipe={originalRecipe}
               multiplier={multiplier}
               subject={subject}
               originalNumber={originalNumber}
             />
-          )}
+          </AnimatedBox>
         </Box>
       </Box>
     </Box>
   );
 }
+
+const AnimatedBox = styled(Box)(({ theme, activeStep, step }) => ({
+  transform:
+    activeStep < step
+      ? 'translateY(150%)'
+      : activeStep > step
+      ? 'translateY(-150%)'
+      : activeStep === step
+      ? 'translateY(0)'
+      : '',
+  opacity: activeStep === step ? '100%' : '0%',
+  transition: 'transform .5s, opacity .5s',
+  transitionDelay: 'width 2s, height 2s',
+  visibility: activeStep === step ? 'visible' : 'hidden',
+  width: activeStep !== step && '0px',
+  height: activeStep !== step && '0px',
+}));
 
 export default App;
