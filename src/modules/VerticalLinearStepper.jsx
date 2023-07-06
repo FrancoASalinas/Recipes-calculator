@@ -26,8 +26,8 @@ const steps = [
 
 export default function VerticalLinearStepper({ onNext, onBack, activeStep }) {
   return (
-    <Box sx={{ maxWidth: 400 }} padding="2rem">
-      <Stepper activeStep={activeStep} orientation="vertical">
+    <Box padding="2rem" height="24rem" width="25rem">
+      <Stepper activeStep={activeStep} orientation="vertical" height="100%">
         {steps.map((step, index) => (
           <Step key={step.label}>
             <StepLabel
@@ -63,14 +63,6 @@ export default function VerticalLinearStepper({ onNext, onBack, activeStep }) {
           </Step>
         ))}
       </Stepper>
-      {activeStep === steps.length && (
-        <Paper square elevation={0} sx={{ p: 3 }}>
-          <Typography>All steps completed - you&apos;re finished</Typography>
-          <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
-            Reset
-          </Button>
-        </Paper>
-      )}
     </Box>
   );
 }

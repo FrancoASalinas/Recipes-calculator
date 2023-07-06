@@ -10,14 +10,14 @@ function NewRecipe({ originalRecipe, multiplier, subject, originalNumber }) {
     <li key={ingredient.name}>
       {ingredient.name}{' '}
       {(Number(ingredient.number) * Number(multiplier)) /
-        Number(originalNumber)}
+        Number(originalNumber)}{' '}
       {ingredient.magnitude}
     </li>
   ));
 
   return (
     <>
-      <Typography variant="h2">Your Recipe is Ready!</Typography>
+      <Typography variant="h4">Your Recipe is Ready!</Typography>
       <Accordion>
         <AccordionSummary>
           <Typography>

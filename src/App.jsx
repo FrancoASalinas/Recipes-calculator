@@ -1,4 +1,4 @@
-import { Box, styled } from '@mui/material';
+import { Box, styled, Grid } from '@mui/material';
 import Recipe from './modules/Recipe';
 import VerticalLinearStepper from './modules/VerticalLinearStepper';
 import { useState } from 'react';
@@ -26,31 +26,27 @@ function App() {
   return (
     <Box
       bgcolor="#000"
-      minWidth="100vw"
-      minHeight="100vh"
+      width="100%"
+      height="100%"
       display="flex"
       justifyContent="center"
       alignItems="center"
     >
-      <Box
+      <StyledGrid
+        container
         bgcolor="#333"
-        width="200px"
-        height="200px"
-        borderRadius="20px"
-        minHeight="28rem"
-        minWidth="fit-content"
-        padding="1rem"
         color="primary.main"
-        display="grid"
         alignItems="center"
-        gridTemplateColumns="repeat(2, minmax(20rem, 25rem))"
+        direction="row"
+        justifyContent="center"
       >
         <VerticalLinearStepper
           onNext={handleNext}
           onBack={handleBack}
           activeStep={activeStep}
+          xs={1}
         />
-        <Box display="flex" alignItems="center" flexDirection="column">
+        <Box xs={1}>
           <AnimatedBox activeStep={activeStep} step={0}>
             <Basics
               onSubject={(e) => setSubject(e.target.value)}
@@ -72,8 +68,6 @@ function App() {
                     magnitude: magnitude,
                   },
                 ]);
-              }}
-              onClear={() => {
                 setName('');
                 setNumber('');
                 setMagnitude('');
@@ -81,6 +75,7 @@ function App() {
               name={name}
               number={number}
               magnitude={magnitude}
+              originalRecipe={originalRecipe}
             />
           </AnimatedBox>
           <AnimatedBox activeStep={activeStep} step={2}>
@@ -92,26 +87,55 @@ function App() {
             />
           </AnimatedBox>
         </Box>
-      </Box>
+      </StyledGrid>
     </Box>
   );
 }
 
-const AnimatedBox = styled(Box)(({ theme, activeStep, step }) => ({
-  transform:
-    activeStep < step
-      ? 'translateY(150%)'
-      : activeStep > step
-      ? 'translateY(-150%)'
-      : activeStep === step
-      ? 'translateY(0)'
-      : '',
-  opacity: activeStep === step ? '100%' : '0%',
+const AnimatedBox = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'activeStep' && prop !== 'step',
+})(({ theme, activeStep, step }) => ({
   transition: 'transform .5s, opacity .5s',
   transitionDelay: 'width 2s, height 2s',
   visibility: activeStep === step ? 'visible' : 'hidden',
-  width: activeStep !== step && '0px',
-  height: activeStep !== step && '0px',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: '.5rem',
+  padding: '.5rem',
+  transform:
+    activeStep < step
+      ? 'translateX(150%)'
+      : activeStep > step
+      ? 'translateX(-150%)'
+      : activeStep === step
+      ? 'translateX(0)'
+      : '',
+  height: activeStep !== step ? '0px' : '25rem',
+  width: activeStep !== step ? '0px' : '15rem',
+  justifyContent: 'center',
+  [theme.breakpoints.up('sm')]: {
+    width: activeStep !== step ? '0px' : '28rem',
+    transform:
+      activeStep < step
+        ? 'translateY(150%)'
+        : activeStep > step
+        ? 'translateY(-150%)'
+        : activeStep === step
+        ? 'translateY(0)'
+        : '',
+    opacity: activeStep === step ? '100%' : '0%',
+  },
+}));
+
+const StyledGrid = styled(Grid)(({ theme }) => ({
+  [theme.breakpoints.up('xs')]: {
+    height: '100%',
+    minHeight: '100vh',
+    borderRadius: 'none',
+    padding: '1rem',
+    overflow: 'hidden',
+  },
 }));
 
 export default App;
