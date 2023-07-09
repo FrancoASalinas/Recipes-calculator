@@ -1,4 +1,13 @@
-import { Box, Button, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Grid,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+  styled,
+} from '@mui/material';
 import { StyledTextField } from './StyledTextField';
 import { useState } from 'react';
 
@@ -11,6 +20,7 @@ export default function Recipe({
   magnitude,
   number,
   originalRecipe,
+  onDelete,
 }) {
   const [ingredientList, setIngredientList] = useState(false);
 
@@ -18,14 +28,36 @@ export default function Recipe({
     <>
       {ingredientList ? (
         <>
-          <ul>
-            {originalRecipe.map((item) => (
-              <li key={item.name}>
-                {item.name} {item.number} {item.magnitude}
-              </li>
-            ))}
-          </ul>
-          <Button onClick={() => setIngredientList(false)}>{'<'}</Button>
+          <Grid
+            item
+            xs={12}
+            md={6}
+            width="100%"
+            height="100%"
+            alignItems="center"
+          >
+            <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
+              Ingredients
+            </Typography>
+            <List>
+              {originalRecipe.map((ingredient, index) => (
+                <ListItem key={ingredient.name + ingredient.number}>
+                  <ListItemText
+                    primary={`${ingredient.name} ${ingredient.number} ${ingredient.magnitude}`}
+                  />
+                  <Button
+                    variant="contained"
+                    onClick={() => onDelete(ingredient)}
+                  >
+                    X
+                  </Button>
+                </ListItem>
+              ))}
+            </List>
+          </Grid>
+          <Button variant="contained" onClick={() => setIngredientList(false)}>
+            {'<'}
+          </Button>
         </>
       ) : (
         <>
@@ -58,6 +90,7 @@ export default function Recipe({
               }}
               variant="contained"
               onClick={onClick}
+              disabled={name === '' || number === ''}
             >
               Add Ingredient
             </Button>

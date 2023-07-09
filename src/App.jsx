@@ -1,7 +1,7 @@
 import { Box, styled, Grid } from '@mui/material';
 import Recipe from './modules/Recipe';
 import VerticalLinearStepper from './modules/VerticalLinearStepper';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import NewRecipe from './modules/NewRecipe';
 import Basics from './modules/Basics';
 
@@ -14,6 +14,21 @@ function App() {
   const [multiplier, setMultiplier] = useState('');
   const [subject, setSubject] = useState('');
   const [originalNumber, setOriginalNumber] = useState('');
+  const [error, setError] = useState(true);
+  const [recipeName, setRecipeName] = useState('');
+
+  useEffect(() => {
+    if (originalRecipe.length === 0 && activeStep === 1) {
+      setError(true);
+    } else if (
+      (multiplier === '' || originalNumber === '' || subject === '') &&
+      activeStep === 0
+    ) {
+      setError(true);
+    } else {
+      setError(false);
+    }
+  }, [name, number, multiplier, originalNumber, subject, originalRecipe]);
 
   const handleNext = () => {
     setActiveStep((prev) => prev + 1);
@@ -22,6 +37,14 @@ function App() {
   const handleBack = () => {
     setActiveStep((prev) => prev - 1);
   };
+
+  function handleDelete(ingredient) {
+    setOriginalRecipe(
+      originalRecipe.filter(
+        (i) => i.name !== ingredient.name && i.number !== ingredient.number
+      )
+    );
+  }
 
   return (
     <Box
@@ -45,6 +68,7 @@ function App() {
           onBack={handleBack}
           activeStep={activeStep}
           xs={1}
+          error={error}
         />
         <Box xs={1}>
           <AnimatedBox activeStep={activeStep} step={0}>
@@ -52,6 +76,7 @@ function App() {
               onSubject={(e) => setSubject(e.target.value)}
               onOriginalNumber={(e) => setOriginalNumber(e.target.value)}
               onMultiplier={(e) => setMultiplier(e.target.value)}
+              onRecipeName={(e) => setRecipeName(e.target.value)}
             />
           </AnimatedBox>
           <AnimatedBox activeStep={activeStep} step={1}>
@@ -60,14 +85,23 @@ function App() {
               onNumber={(e) => setNumber(e.target.value)}
               onMagnitude={(e) => setMagnitude(e.target.value)}
               onClick={() => {
-                setOriginalRecipe([
-                  ...originalRecipe,
-                  {
-                    name: name,
-                    number: number,
-                    magnitude: magnitude,
-                  },
-                ]);
+                if (
+                  originalRecipe.some(
+                    (ingredient) =>
+                      ingredient.name === name && ingredient.number === number
+                  )
+                ) {
+                  setOriginalRecipe([...originalRecipe]);
+                } else {
+                  setOriginalRecipe([
+                    ...originalRecipe,
+                    {
+                      name: name,
+                      number: number,
+                      magnitude: magnitude,
+                    },
+                  ]);
+                }
                 setName('');
                 setNumber('');
                 setMagnitude('');
@@ -76,6 +110,7 @@ function App() {
               number={number}
               magnitude={magnitude}
               originalRecipe={originalRecipe}
+              onDelete={handleDelete}
             />
           </AnimatedBox>
           <AnimatedBox activeStep={activeStep} step={2}>
@@ -84,6 +119,7 @@ function App() {
               multiplier={multiplier}
               subject={subject}
               originalNumber={originalNumber}
+              recipeName={recipeName}
             />
           </AnimatedBox>
         </Box>

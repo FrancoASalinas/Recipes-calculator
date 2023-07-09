@@ -5,7 +5,6 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import StepContent from '@mui/material/StepContent';
 import Button from '@mui/material/Button';
-import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 
 const steps = [
@@ -24,7 +23,12 @@ const steps = [
   },
 ];
 
-export default function VerticalLinearStepper({ onNext, onBack, activeStep }) {
+export default function VerticalLinearStepper({
+  onNext,
+  onBack,
+  activeStep,
+  error,
+}) {
   return (
     <Box padding="2rem" height="24rem" width="25rem">
       <Stepper activeStep={activeStep} orientation="vertical" height="100%">
@@ -47,6 +51,7 @@ export default function VerticalLinearStepper({ onNext, onBack, activeStep }) {
                     variant="contained"
                     onClick={onNext}
                     sx={{ mt: 1, mr: 1 }}
+                    disabled={error}
                   >
                     {index === steps.length - 1 ? 'Finish' : 'Continue'}
                   </Button>

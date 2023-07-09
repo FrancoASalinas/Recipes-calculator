@@ -1,7 +1,12 @@
 import { Box, Typography } from '@mui/material';
 import { StyledTextField } from './StyledTextField';
 
-export default function Basics({ onSubject, onOriginalNumber, onMultiplier }) {
+export default function Basics({
+  onSubject,
+  onOriginalNumber,
+  onMultiplier,
+  onRecipeName,
+}) {
   return (
     <>
       <Typography variant="h4">Set first parameters</Typography>
@@ -9,6 +14,7 @@ export default function Basics({ onSubject, onOriginalNumber, onMultiplier }) {
         label="Number of units"
         onChange={onOriginalNumber}
         required
+        type="number"
       />
       <StyledTextField
         placeholder="People, portions."
@@ -20,7 +26,9 @@ export default function Basics({ onSubject, onOriginalNumber, onMultiplier }) {
         label="Desired number of units"
         onChange={onMultiplier}
         required
+        type="number"
       />
+      <StyledTextField label="Recipe name" onChange={onRecipeName} />
     </>
   );
 }
