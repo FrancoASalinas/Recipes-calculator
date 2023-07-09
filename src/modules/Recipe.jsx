@@ -1,15 +1,12 @@
-import {
-  Box,
-  Button,
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-  Typography,
-  styled,
-} from '@mui/material';
-import { StyledTextField } from './StyledTextField';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Typography from '@mui/material/Typography';
 import { useState } from 'react';
+import { StyledTextField } from './StyledTextField';
 
 export default function Recipe({
   onName,

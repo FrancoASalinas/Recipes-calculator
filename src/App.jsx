@@ -1,4 +1,6 @@
-import { Box, styled, Grid } from '@mui/material';
+import Box from '@mui/material/Box';
+import { styled } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import Recipe from './modules/Recipe';
 import VerticalLinearStepper from './modules/VerticalLinearStepper';
 import { useEffect, useState } from 'react';
