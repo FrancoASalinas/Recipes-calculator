@@ -38,6 +38,14 @@ describe('Router', () => {
 
       expect(screen.getByAltText(/reciper logo/i)).toBeDefined();
     });
+
+    test('Click on Header\'s logo should navigate to Homepage', async() => {
+      const user = userEvent.setup();
+      render(router(['/new']));
+
+      await user.click(screen.getByAltText(/reciper logo/i))
+      expect(screen.getByText(/resize fast, prepare it faster/i)).toBeTruthy();
+    })
   });
 
   describe('Homepage', () => {
