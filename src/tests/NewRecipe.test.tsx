@@ -145,7 +145,7 @@ describe('New Recipe', () => {
       await user.type(screen.getByLabelText(/magnitude/i), 'g');
 
       await user.click(screen.getByText('Add'));
-      await user.click(screen.getAllByTestId('add-ingredient-button')[0]);
+      await user.click(addIngredientButton);
       await user.click(screen.getByText('Add'));
 
       expect(screen.getAllByText('Flour 50g').length).toBe(1);
