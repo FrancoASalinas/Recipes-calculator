@@ -13,6 +13,7 @@ describe('New Recipe', () => {
       ),
       newServesInput: screen.getByPlaceholderText(/new recipe serves/i),
       addIngredientButton: screen.getByText(/add ingredient/i),
+      createButton: screen.getByText('Create'),
     };
   }
 
@@ -45,9 +46,8 @@ describe('New Recipe', () => {
   });
 
   test("If there's an error, Add ingredient and Create buttons should be disabled", async () => {
-    const { user, originalServesInput, addIngredientButton } = setup(
-      <NewRecipe />
-    );
+    const { user, originalServesInput, addIngredientButton, createButton } =
+      setup(<NewRecipe />);
 
     await user.type(originalServesInput, 'string');
     expect(
@@ -55,7 +55,10 @@ describe('New Recipe', () => {
     ).toBeDefined();
 
     await user.click(addIngredientButton);
-    expect(screen.queryByPlaceholderText(/quantity/i)).toBeNull();
+    expect(screen.queryByLabelText(/quantity/i)).toBeNull();
+
+    await user.click(createButton);
+    expect(originalServesInput).toBeTruthy();
   });
 
   test('All inputs should be filled before enabling Add ingredient button', async () => {
@@ -402,4 +405,61 @@ describe('New Recipe', () => {
       expect(screen.queryByText('salt 50')).toBeNull();
     });
   });
+
+  test('if there are no ingredients, create button should be disabled', async () => {
+    const {
+      user,
+      createButton,
+      recipeNameInput,
+      originalServesInput,
+      newServesInput,
+    } = setup(<NewRecipe />);
+
+    await user.type(recipeNameInput, 'recipe name');
+    await user.type(originalServesInput, '2');
+    await user.type(newServesInput, '5');
+
+    await user.click(createButton);
+
+    expect(screen.queryByText('recipe name')).toBeNull();
+  });
+
+  describe("Creating a new recipe should show it's name and ingredients with new values", () => {
+    test.each([
+      ['salt', '50', 'g', '2', '4'],
+      ['water', '200', 'ml', '10', '25'],
+      ['eggs', '2', ' ', '13', '15'],
+      ['meat', '250', 'g', '218', '476'],
+    ])(
+      'name: %s, quantity: %s, magnitude: %s, original serves: %s, new serves: %s',
+      async (name, quantity, magnitude, ogServes, newServes) => {
+        const {
+          user,
+          createButton,
+          recipeNameInput,
+          originalServesInput,
+          newServesInput,
+        } = setup(<NewRecipe />);
+
+        Element.prototype.scrollIntoView = vi.fn();
+
+        await user.type(recipeNameInput, 'recipe name');
+        await user.type(originalServesInput, ogServes);
+        await user.type(newServesInput, newServes);
+
+        await user.click(screen.getByText('Add Ingredient'));
+        await user.type(screen.getByLabelText(/ingredient name/i), name);
+        await user.type(screen.getByLabelText(/quantity/i), quantity);
+        await user.type(screen.getByLabelText(/magnitude/i), magnitude);
+        await user.click(screen.getByText('Add'));
+
+        await user.click(createButton);
+        expect(screen.getByText('recipe name')).toBeTruthy();
+        expect(
+          screen.getByText(`${name} ${Number(newServes) * Number(quantity) / Number(ogServes)}${magnitude.trim()}`)
+        ).toBeTruthy();
+      }
+    );
+  });
+
 });

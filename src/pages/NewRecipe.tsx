@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import AddIngredientModal from '../components/AddIngredientModal';
 
 function NewRecipe() {
@@ -14,9 +14,16 @@ function NewRecipe() {
   const [ogServes, setOgServes] = useState<string>('');
   const [newServes, setNewServes] = useState<string>('');
   const [modalErrors, setModalErrors] = useState<string[]>([]);
+  const [resizedRecipe, setResizedRecipe] = useState<boolean>(false);
+  const resizedRecipeNameRef = useRef<any>();
 
   useEffect(() => {
     checkErrors();
+
+    if (resizedRecipe) {
+        resizedRecipeNameRef.current.scrollIntoView({behavior: 'smooth'}), 1
+    }
+
   }, [
     ingredientName,
     ingredientQuantity,
@@ -24,6 +31,7 @@ function NewRecipe() {
     recipeName,
     ogServes,
     newServes,
+    resizedRecipe,
   ]);
 
   function clearInputState() {
@@ -224,11 +232,35 @@ function NewRecipe() {
           </button>
           <button
             className='bg-nn p-2 w-full mx-auto rounded-2xl disabled:bg-slate-500 transition-all mt-5 max-w-[20rem]'
-            disabled={errors.length > 0}
+            disabled={errors.length > 0 || ingredients.length === 0}
+            onClick={() => setResizedRecipe(true)}
           >
             Create
           </button>
         </div>
+        { resizedRecipe && 
+
+          <div className={`w-full`}>
+          <div className='h-[1px] w-full my-3 bg-richblack'></div>
+          <div className='flex flex-col items-center'>
+            <h3
+              className='text-2xl font-croissant mb-3'
+              ref={resizedRecipeNameRef}
+              >
+              {recipeName}
+            </h3>
+            <ul>
+              {ingredients.map(ingredient => (
+                <li className='w-full list-item max-w-xs p-1 px-4'>{`${
+                  ingredient.name
+                } ${Number(newServes.slice(0)) * Number(ingredient.quantity) / Number(ogServes)}${
+                  ingredient.magnitude
+                }`}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+                }
       </div>
       {modal && (
         <AddIngredientModal
