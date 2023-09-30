@@ -8,7 +8,17 @@ function AddIngredientModal({
   onIngredientName,
   onIngredientQuantity,
   onIngredientMagnitude,
+  editIndex,
+  onEdit,
+  ingredientName,
+  ingredientQuantity,
+  ingredientMagnitude
 }: {
+  ingredientName: string,
+  ingredientQuantity:string;
+  ingredientMagnitude: string,
+  editIndex: number | null;
+  onEdit: () => void;
   errors: string[];
   onClose: () => void;
   onAdd: () => void;
@@ -21,6 +31,11 @@ function AddIngredientModal({
 
   function add() {
     onAdd();
+    onClose();
+  }
+
+  function edit() {
+    onEdit();
     onClose();
   }
 
@@ -67,6 +82,7 @@ function AddIngredientModal({
             Ingredient name*
           </label>
           <input
+            value={ingredientName}
             type='text'
             id='name'
             placeholder='salt, flour, water'
@@ -79,6 +95,7 @@ function AddIngredientModal({
             Quantity*
           </label>
           <input
+          value={ingredientQuantity}
             type='text'
             id='quantity'
             placeholder='50, 100, 1'
@@ -89,6 +106,7 @@ function AddIngredientModal({
             Magnitude
           </label>
           <input
+          value={ingredientMagnitude}
             type='text'
             placeholder='g, ml, oz'
             id='magnitude'
@@ -110,7 +128,7 @@ function AddIngredientModal({
           </ul>
           <button
             disabled={errors.length > 0}
-            onClick={add}
+            onClick={() => (typeof editIndex === 'number' ? edit() : add())}
             className='bg-nn p-2 w-full mx-auto rounded-2xl disabled:bg-slate-500 transition-all mt-3 '
           >
             Add

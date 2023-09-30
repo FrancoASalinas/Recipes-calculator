@@ -377,6 +377,34 @@ describe('New Recipe', () => {
       expect(screen.getByText('salt 50g')).toBeTruthy();
     });
 
+    test('Editing an ingredient should show old values in the modal', async () => {
+      const {
+        user,
+        recipeNameInput,
+        originalServesInput,
+        addIngredientButton,
+        newServesInput,
+      } = setup(<NewRecipe />);
+
+      await user.type(recipeNameInput, '1');
+      await user.type(originalServesInput, '1');
+      await user.type(newServesInput, '1');
+
+      await user.click(addIngredientButton);
+
+      const quantityInput = screen.getByLabelText(/quantity/i);
+      const nameInput = screen.getByLabelText(/ingredient name/i);
+
+      await user.type(nameInput, 'salt');
+      await user.type(quantityInput, '50');
+
+      await user.click(screen.getByText('Add'));
+
+      await user.click(screen.getByText('Edit'));
+      expect(screen.getByDisplayValue('salt')).toBeTruthy();
+      expect(screen.getByDisplayValue('50')).toBeTruthy();
+    });
+
     test('Delete button should delete the ingredient', async () => {
       const {
         user,
@@ -456,10 +484,13 @@ describe('New Recipe', () => {
         await user.click(createButton);
         expect(screen.getByText('recipe name')).toBeTruthy();
         expect(
-          screen.getByText(`${name} ${Number(newServes) * Number(quantity) / Number(ogServes)}${magnitude.trim()}`)
+          screen.getByText(
+            `${name} ${
+              (Number(newServes) * Number(quantity)) / Number(ogServes)
+            }${magnitude.trim()}`
+          )
         ).toBeTruthy();
       }
     );
   });
-
 });

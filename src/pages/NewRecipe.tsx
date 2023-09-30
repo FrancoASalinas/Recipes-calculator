@@ -15,15 +15,15 @@ function NewRecipe() {
   const [newServes, setNewServes] = useState<string>('');
   const [modalErrors, setModalErrors] = useState<string[]>([]);
   const [resizedRecipe, setResizedRecipe] = useState<boolean>(false);
+  const [editIndex, setEditIndex] = useState<number | null>(null);
   const resizedRecipeNameRef = useRef<any>();
 
   useEffect(() => {
     checkErrors();
 
     if (resizedRecipe) {
-        resizedRecipeNameRef.current.scrollIntoView({behavior: 'smooth'}), 1
+      resizedRecipeNameRef.current.scrollIntoView({ behavior: 'smooth' }), 1;
     }
-
   }, [
     ingredientName,
     ingredientQuantity,
@@ -40,21 +40,33 @@ function NewRecipe() {
     setIngredientQuantity('');
   }
 
-  function editIngredient({
-    name,
-    quantity,
-    magnitude,
-  }: {
-    name: string;
-    quantity: string;
-    magnitude: string | undefined;
-  }) {
+  function openEditMode(i: number) {
+    setIngredientName(ingredients[i].name);
+    setIngredientQuantity(ingredients[i].quantity);
+    setIngredientMagnitude(ingredients[i].magnitude || '');
     setModal(true);
-    setIngredientName(name);
-    setIngredientQuantity(quantity);
-    setIngredientMagnitude(magnitude || '');
+    setEditIndex(i);
   }
 
+  function editIngredient() {
+    if (typeof editIndex === 'number') {
+      setIngredients(
+        ingredients.map((ingredient, i) => {
+          if (editIndex === i) {
+            return {
+              name: ingredientName,
+              quantity: ingredientQuantity,
+              magnitude: ingredientMagnitude,
+            };
+          } else {
+            return ingredient;
+          }
+        })
+      );
+    }
+    clearInputState();
+    setEditIndex(null);
+  }
   const errorCodes: {
     string: string;
     condition: boolean;
@@ -127,34 +139,14 @@ function NewRecipe() {
   }
 
   function addIngredient() {
-    if (ingredients.some(ingredient => ingredient.name === ingredientName)) {
-      setIngredients(
-        ingredients.map(ingredient => {
-          if (ingredient.name === ingredientName) {
-            return {
-              name: ingredient.name,
-              quantity: ingredientQuantity,
-              magnitude: ingredientMagnitude,
-            } as any;
-          } else {
-            return {
-              name: ingredient.name,
-              quantity: ingredient.quantity,
-              magnitude: ingredient.magnitude,
-            };
-          }
-        })
-      );
-    } else {
-      setIngredients([
-        ...ingredients,
-        {
-          name: ingredientName,
-          quantity: ingredientQuantity,
-          magnitude: ingredientMagnitude,
-        },
-      ]);
-    }
+    setIngredients([
+      ...ingredients,
+      {
+        name: ingredientName,
+        quantity: ingredientQuantity,
+        magnitude: ingredientMagnitude,
+      },
+    ]);
   }
 
   return (
@@ -196,7 +188,7 @@ function NewRecipe() {
         <h3 className='text-2xl font-croissant mb-3'>Ingredients</h3>
         <div className='flex flex-col items-center w-full'>
           {ingredients.length > 0 &&
-            ingredients.map(ingredient => (
+            ingredients.map((ingredient, i) => (
               <li
                 className='list-none flex justify-between w-full max-w-xs p-1 px-4'
                 key={ingredient.name}
@@ -207,7 +199,7 @@ function NewRecipe() {
                 <div className='flex justify-center gap-2'>
                   <button
                     className='decoration-nn underline'
-                    onClick={() => editIngredient(ingredient)}
+                    onClick={() => openEditMode(i)}
                   >
                     Edit
                   </button>
@@ -238,32 +230,37 @@ function NewRecipe() {
             Create
           </button>
         </div>
-        { resizedRecipe && 
-
+        {resizedRecipe && (
           <div className={`w-full`}>
-          <div className='h-[1px] w-full my-3 bg-richblack'></div>
-          <div className='flex flex-col items-center'>
-            <h3
-              className='text-2xl font-croissant mb-3'
-              ref={resizedRecipeNameRef}
+            <div className='h-[1px] w-full my-3 bg-richblack'></div>
+            <div className='flex flex-col items-center'>
+              <h3
+                className='text-2xl font-croissant mb-3'
+                ref={resizedRecipeNameRef}
               >
-              {recipeName}
-            </h3>
-            <ul>
-              {ingredients.map(ingredient => (
-                <li className='w-full list-item max-w-xs p-1 px-4'>{`${
-                  ingredient.name
-                } ${Number(newServes.slice(0)) * Number(ingredient.quantity) / Number(ogServes)}${
-                  ingredient.magnitude
-                }`}</li>
-              ))}
-            </ul>
+                {recipeName}
+              </h3>
+              <ul>
+                {ingredients.map(ingredient => (
+                  <li className='w-full list-item max-w-xs p-1 px-4'>{`${
+                    ingredient.name
+                  } ${
+                    (Number(newServes.slice(0)) * Number(ingredient.quantity)) /
+                    Number(ogServes)
+                  }${ingredient.magnitude}`}</li>
+                ))}
+              </ul>
+            </div>
           </div>
-        </div>
-                }
+        )}
       </div>
       {modal && (
         <AddIngredientModal
+        ingredientMagnitude={ingredientMagnitude}
+        ingredientQuantity={ingredientQuantity}
+        ingredientName={ingredientName}
+          editIndex={editIndex}
+          onEdit={editIngredient}
           onAdd={addIngredient}
           onIngredientName={(e: any) =>
             setIngredientName(e.target.value.trim())
