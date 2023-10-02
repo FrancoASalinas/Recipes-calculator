@@ -101,20 +101,20 @@ function NewRecipe() {
   }[] = [
     {
       string: 'Quantity should be a number',
-      condition: isNaN(Number(ingredientQuantity)),
+      condition: isNaN(Number(ingredientQuantity.trim())),
       array: modalErrors,
       setter: setModalErrors,
     },
     {
       string: 'Obligatory fields (*) must be filled',
-      condition: ingredientName.length === 0 || ingredientQuantity.length === 0,
+      condition: ingredientName.trim().length === 0 || ingredientQuantity.trim().length === 0,
       array: modalErrors,
       setter: setModalErrors,
     },
     {
       string: "Magnitude shouldn't be a number",
       condition:
-        Number.isInteger(Number(ingredientMagnitude)) &&
+        Number.isInteger(Number(ingredientMagnitude.trim())) &&
         ingredientMagnitude.length > 0,
       array: modalErrors,
       setter: setModalErrors,
@@ -168,9 +168,9 @@ function NewRecipe() {
     setIngredients([
       ...ingredients,
       {
-        name: ingredientName,
-        quantity: ingredientQuantity,
-        magnitude: ingredientMagnitude,
+        name: ingredientName.trim(),
+        quantity: ingredientQuantity.trim(),
+        magnitude: ingredientMagnitude.trim(),
       },
     ]);
   }
@@ -296,14 +296,14 @@ function NewRecipe() {
           onEdit={editIngredient}
           onAdd={addIngredient}
           onIngredientName={(e: any) =>
-            setIngredientName(e.target.value.trim())
+            setIngredientName(e.target.value)
           }
           onIngredientQuantity={(e: any) =>
-            setIngredientQuantity(e.target.value.trim())
+            setIngredientQuantity(e.target.value)
           }
           errors={modalErrors}
           onIngredientMagnitude={(e: any) =>
-            setIngredientMagnitude(e.target.value.trim())
+            setIngredientMagnitude(e.target.value)
           }
           onClose={() => setModal(false)}
         />

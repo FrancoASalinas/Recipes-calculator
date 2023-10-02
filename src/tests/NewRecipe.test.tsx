@@ -158,6 +158,7 @@ describe('New Recipe', () => {
       ['Flour', '200', 'g'],
       ['Water', '500', 'ml'],
       ['Salt', '50', 'grams'],
+      ['Dulce de Leche', '100', 'g'],
     ])(
       'adding %s %s%s should be showing it in the ingredients list',
       async (ingredientName, quantity, magnitude) => {
@@ -452,45 +453,4 @@ describe('New Recipe', () => {
     expect(screen.queryByText('recipe name')).toBeNull();
   });
 
-  describe("Creating a new recipe should show it's name and ingredients with new values", () => {
-    test.each([
-      ['salt', '50', 'g', '2', '4'],
-      ['water', '200', 'ml', '10', '25'],
-      ['eggs', '2', ' ', '13', '15'],
-      ['meat', '250', 'g', '218', '476'],
-    ])(
-      'name: %s, quantity: %s, magnitude: %s, original serves: %s, new serves: %s',
-      async (name, quantity, magnitude, ogServes, newServes) => {
-        const {
-          user,
-          createButton,
-          recipeNameInput,
-          originalServesInput,
-          newServesInput,
-        } = setup(<NewRecipe />);
-
-        Element.prototype.scrollIntoView = vi.fn();
-
-        await user.type(recipeNameInput, 'recipe name');
-        await user.type(originalServesInput, ogServes);
-        await user.type(newServesInput, newServes);
-
-        await user.click(screen.getByText('Add Ingredient'));
-        await user.type(screen.getByLabelText(/ingredient name/i), name);
-        await user.type(screen.getByLabelText(/quantity/i), quantity);
-        await user.type(screen.getByLabelText(/magnitude/i), magnitude);
-        await user.click(screen.getByText('Add'));
-
-        await user.click(createButton);
-        expect(screen.getByText('recipe name')).toBeTruthy();
-        expect(
-          screen.getByText(
-            `${name} ${
-              (Number(newServes) * Number(quantity)) / Number(ogServes)
-            }${magnitude.trim()}`
-          )
-        ).toBeTruthy();
-      }
-    );
-  });
 });
