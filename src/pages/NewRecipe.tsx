@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import AddIngredientModal from '../components/AddIngredientModal';
+import { PDFDownloadLink, Document, Page, Text } from '@react-pdf/renderer';
 
 function NewRecipe() {
   const [errors, setErrors] = useState<string[]>([]);
@@ -18,6 +19,31 @@ function NewRecipe() {
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const resizedRecipeNameRef = useRef<any>();
 
+  const RecipePdf = () => (
+    <Document>
+      <Page style={{ padding: 30, backgroundColor: '#FFE1EA' }}>
+        <Text
+          style={{
+            textAlign: 'center',
+            fontSize: 30,
+            fontFamily: 'Helvetica',
+            marginBottom: 20,
+          }}
+        >{`${recipeName} (${newServes} serves)`}</Text>
+        {ingredients.map(ingredient => (
+          <Text
+            style={{
+              paddingVertical: 6,
+              paddingHorizontal: 20,
+              fontFamily: 'Courier',
+            }}
+          >{`${ingredient.name} ${
+            (Number(newServes) * Number(ingredient.quantity)) / Number(ogServes)
+          }`}</Text>
+        ))}
+      </Page>
+    </Document>
+  );
   useEffect(() => {
     checkErrors();
 
@@ -250,15 +276,22 @@ function NewRecipe() {
                   }${ingredient.magnitude}`}</li>
                 ))}
               </ul>
+              <PDFDownloadLink
+                document={<RecipePdf />}
+                fileName={recipeName}
+                className='bg-nn p-2 w-full mx-auto rounded-2xl disabled:bg-slate-500 block text-center transition-all mt-5 max-w-[20rem]'
+              >
+                {({ loading }) => (loading ? 'Please Wait' : 'Download PDF')}
+              </PDFDownloadLink>
             </div>
           </div>
         )}
       </div>
       {modal && (
         <AddIngredientModal
-        ingredientMagnitude={ingredientMagnitude}
-        ingredientQuantity={ingredientQuantity}
-        ingredientName={ingredientName}
+          ingredientMagnitude={ingredientMagnitude}
+          ingredientQuantity={ingredientQuantity}
+          ingredientName={ingredientName}
           editIndex={editIndex}
           onEdit={editIngredient}
           onAdd={addIngredient}
