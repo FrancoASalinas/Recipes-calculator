@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import cross from '../assets/cross.svg';
+import { Ingredient } from '../pages/NewRecipe';
 
 function AddIngredientModal({
   errors,
@@ -8,16 +9,16 @@ function AddIngredientModal({
   onIngredientName,
   onIngredientQuantity,
   onIngredientMagnitude,
-  editIndex,
+  ingredientToEdit,
   onEdit,
-  ingredientName,
-  ingredientQuantity,
-  ingredientMagnitude
+  ingredientInputs,
 }: {
-  ingredientName: string,
-  ingredientQuantity:string;
-  ingredientMagnitude: string,
-  editIndex: number | null;
+  ingredientInputs: {
+    ingredientName: string;
+    ingredientQuantity: string;
+    ingredientMagnitude: string;
+  };
+  ingredientToEdit: Ingredient | null;
   onEdit: () => void;
   errors: string[];
   onClose: () => void;
@@ -82,7 +83,7 @@ function AddIngredientModal({
             Ingredient name*
           </label>
           <input
-            value={ingredientName}
+            value={ingredientInputs.ingredientName}
             type='text'
             id='name'
             placeholder='salt, flour, water'
@@ -95,7 +96,7 @@ function AddIngredientModal({
             Quantity*
           </label>
           <input
-          value={ingredientQuantity}
+            value={ingredientInputs.ingredientQuantity}
             type='text'
             id='quantity'
             placeholder='50, 100, 1'
@@ -106,7 +107,7 @@ function AddIngredientModal({
             Magnitude
           </label>
           <input
-          value={ingredientMagnitude}
+            value={ingredientInputs.ingredientMagnitude}
             type='text'
             placeholder='g, ml, oz'
             id='magnitude'
@@ -128,7 +129,7 @@ function AddIngredientModal({
           </ul>
           <button
             disabled={errors.length > 0}
-            onClick={() => (typeof editIndex === 'number' ? edit() : add())}
+            onClick={() => (ingredientToEdit !== null ? edit() : add())}
             className='bg-nn p-2 w-full mx-auto rounded-2xl disabled:bg-slate-500 transition-all mt-3 '
           >
             Add
