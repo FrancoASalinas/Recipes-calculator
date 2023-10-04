@@ -10,10 +10,13 @@ export interface Ingredient {
 
 function NewRecipe() {
   const [modal, setModal] = useState(false);
-  const [resizedRecipe, setResizedRecipe] = useState<Ingredient[]>();
   const [errors, setErrors] = useState<string[]>([]);
   const [modalErrors, setModalErrors] = useState<string[]>([]);
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+  const [resizedIngredients, setResizedIngredients] = useState<Ingredient[]>(
+    []
+  );
+  const [resizedTitle, setResizedTitle] = useState<string>('');
 
   const [ingredientInputs, setIngredientInputs] = useState<{
     ingredientName: string;
@@ -108,7 +111,7 @@ function NewRecipe() {
             marginBottom: 20,
           }}
         >{`${recipeInputs.recipeName} (${recipeInputs.newServes} serves)`}</Text>
-        {resizedRecipe?.map(ingredient => (
+        {resizedIngredients?.map(ingredient => (
           <Text
             style={{
               paddingVertical: 6,
@@ -124,10 +127,40 @@ function NewRecipe() {
   useEffect(() => {
     checkErrors();
 
-    if (resizedRecipe) {
+    if (resizedIngredients.length > 0) {
       resizedRecipeNameRef.current.scrollIntoView({ behavior: 'smooth' }), 1;
     }
-  }, [ingredientInputs, recipeInputs, resizedRecipe]);
+  }, [ingredientInputs, recipeInputs, resizedIngredients]);
+
+  function equalIngredientLists(a: any[], b: any[]) {
+    function inequalIngredientsQuantitys(a: Ingredient, b: Ingredient) {
+      if (
+        (Number(recipeInputs.newServes) * Number(a.quantity)) /
+          Number(recipeInputs.ogServes) !==
+        Number(b.quantity)
+      ) {
+        return true;
+      } else return false;
+    }
+
+    if (resizedTitle !== recipeInputs.recipeName) return false;
+
+    if (a.length !== b.length) {
+      return false;
+    }
+
+    for (let i = 0; i < a.length; i++) {
+      if (
+        a[i].name !== b[i].name ||
+        inequalIngredientsQuantitys(a[i], b[i]) ||
+        a[i].magnitude !== b[i].magnitude
+      ) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 
   function clearInputState() {
     setIngredientInputs({
@@ -285,9 +318,15 @@ function NewRecipe() {
           </button>
           <button
             className='bg-nn p-2 w-full mx-auto rounded-2xl disabled:bg-slate-500 transition-all mt-5 max-w-[20rem]'
-            disabled={errors.length > 0 || ingredients.length === 0}
-            onClick={() =>
-              setResizedRecipe(
+            disabled={
+              errors.length > 0 ||
+              ingredients.length === 0 ||
+              equalIngredientLists(ingredients, resizedIngredients)
+            }
+            onClick={() => {
+              setResizedTitle(recipeInputs.recipeName);
+
+              setResizedIngredients(
                 ingredients.map(ingredient => ({
                   ...ingredient,
                   quantity: `${
@@ -296,37 +335,38 @@ function NewRecipe() {
                     Number(recipeInputs.ogServes)
                   }`,
                 }))
-              )
-            }
+              );
+            }}
           >
-            Create
+            {resizedIngredients.length === 0 ? 'Create' : 'Update'}
           </button>
         </div>
-        {typeof resizedRecipe === 'object' && resizedRecipe.length > 0 && (
-          <div className={`w-full`}>
-            <div className='h-[1px] w-full my-3 bg-richblack'></div>
-            <div className='flex flex-col items-center'>
-              <h3
-                className='text-2xl font-croissant mb-3'
-                ref={resizedRecipeNameRef}
-              >
-                {recipeInputs.recipeName}
-              </h3>
-              <ul>
-                {resizedRecipe.map(ingredient => (
-                  <li className='w-full list-item max-w-xs p-1 px-4'>{`${ingredient.name} ${ingredient.quantity}${ingredient.magnitude}`}</li>
-                ))}
-              </ul>
-              <PDFDownloadLink
-                document={<RecipePdf />}
-                fileName={recipeInputs.recipeName}
-                className='bg-nn p-2 w-full mx-auto rounded-2xl disabled:bg-slate-500 block text-center transition-all mt-5 max-w-[20rem]'
-              >
-                {({ loading }) => (loading ? 'Please Wait' : 'Download PDF')}
-              </PDFDownloadLink>
+        {typeof resizedIngredients === 'object' &&
+          resizedIngredients.length > 0 && (
+            <div className={`w-full`}>
+              <div className='h-[1px] w-full my-3 bg-richblack'></div>
+              <div className='flex flex-col items-center'>
+                <h3
+                  className='text-2xl font-croissant mb-3'
+                  ref={resizedRecipeNameRef}
+                >
+                  {resizedTitle}
+                </h3>
+                <ul>
+                  {resizedIngredients.map(ingredient => (
+                    <li className='w-full list-item max-w-xs p-1 px-4'>{`${ingredient.name} ${ingredient.quantity}${ingredient.magnitude}`}</li>
+                  ))}
+                </ul>
+                <PDFDownloadLink
+                  document={<RecipePdf />}
+                  fileName={recipeInputs.recipeName}
+                  className='bg-nn p-2 w-full mx-auto rounded-2xl disabled:bg-slate-500 block text-center transition-all mt-5 max-w-[20rem]'
+                >
+                  {({ loading }) => (loading ? 'Please Wait' : 'Download PDF')}
+                </PDFDownloadLink>
+              </div>
             </div>
-          </div>
-        )}
+          )}
       </div>
       {modal && (
         <AddIngredientModal
