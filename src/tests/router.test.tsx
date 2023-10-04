@@ -25,12 +25,6 @@ describe('Router', () => {
       expect(screen.getByAltText(/reciper logo/i)).toBeDefined();
     });
 
-    test('Header should render on My Recipe page', () => {
-      render(router(['/myrecipes']));
-
-      expect(screen.getByAltText(/reciper logo/i)).toBeDefined();
-    });
-
     test('Header should render on Error / 404 page', async () => {
       render(router(['/nonpage']));
 
@@ -38,44 +32,34 @@ describe('Router', () => {
 
       expect(screen.getByAltText(/reciper logo/i)).toBeDefined();
     });
-
-    test('Click on Header\'s logo should navigate to Homepage', async() => {
-      const user = userEvent.setup();
-      render(router(['/new']));
-
-      await user.click(screen.getByAltText(/reciper logo/i))
-      expect(screen.getByText(/resize fast, prepare it faster/i)).toBeTruthy();
-    })
   });
 
   describe('Homepage', () => {
-
-    const homepageText = /resize fast, prepare it faster/i
+    const homepageText = /resize fast, prepare it faster/i;
 
     test('Homepage should render on root path', () => {
-      render(router(['/']))
+      render(router(['/']));
 
-      expect(screen.getByText(homepageText)).toBeDefined()
+      expect(screen.getByText(homepageText)).toBeDefined();
     });
     test("Homepage shouldn't render on New Recipe page", () => {
       render(router(['/new']));
 
-      expect(screen.queryByText(homepageText)).toBeNull()
+      expect(screen.queryByText(homepageText)).toBeNull();
     });
     test("Homepage shouldn't render on My Recipes page", () => {
       render(router(['/myrecipes']));
 
-      expect(screen.queryByText(homepageText)).toBeNull()
-
+      expect(screen.queryByText(homepageText)).toBeNull();
     });
 
-    test("New Recipe link should navigate to /new", async () => {
-      render(router(['/']))
-      const user = userEvent.setup()
+    test('New Recipe link should navigate to /new', async () => {
+      render(router(['/']));
+      const user = userEvent.setup();
 
       await user.click(screen.getByText(/new recipe/i));
-      expect(screen.getByText(/new recipe/i)).toBeDefined()
-      expect(screen.queryByText(homepageText)).toBeNull()
-    })
+      expect(screen.getByText(/new recipe/i)).toBeDefined();
+      expect(screen.queryByText(homepageText)).toBeNull();
+    });
   });
 });

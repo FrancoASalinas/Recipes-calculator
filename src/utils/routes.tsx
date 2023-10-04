@@ -7,7 +7,7 @@ const NewRecipe = lazy(() => import('../pages/NewRecipe'));
 
 export const routes = (
 
-  <Route path='/' element={<App />}>
+  <Route path='/Recipes-calculator/' element={<App />}>
         <Route index element={<Homepage />} />
         <Route path='new' element={<NewRecipe />} />
         <Route path='404' element={<ErrorPage />} />

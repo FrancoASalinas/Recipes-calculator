@@ -12,7 +12,7 @@ function Homepage() {
         tooling.
       </p>
       <div className="flex justify-center md:text-3xl text-xl sm:text-2xl gap-3 mt-7">
-        <Link to='/new' className="border-2 border-nn rounded-full p-2 hover:scale-110 transition-all">
+        <Link to='new' className="border-2 border-nn rounded-full p-2 hover:scale-110 transition-all">
         New Recipe
         </Link>
       </div>

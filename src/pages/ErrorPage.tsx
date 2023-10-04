@@ -11,7 +11,7 @@ function ErrorPage() {
         The page you are looking for does not exist, please check the URL or:
       </p>
       <div className='flex-col mt-3 flex group h-fit w-fit'>
-        <Link to='/' className='text-2xl'>
+        <Link to='/Recipes-calculator/' className='text-2xl'>
           Go to Homepage
         </Link>
         <div className='h-[2px] w-0 group-hover:w-full bg-nn transition-all'></div>
