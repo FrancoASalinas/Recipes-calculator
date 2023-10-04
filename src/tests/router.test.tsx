@@ -77,15 +77,5 @@ describe('Router', () => {
       expect(screen.getByText(/new recipe/i)).toBeDefined()
       expect(screen.queryByText(homepageText)).toBeNull()
     })
-
-    test("New Recipe link should navigate to /myrecipes", async () => {
-      render(router(['/']))
-      const user = userEvent.setup()
-
-      await user.click(screen.getByText(/my recipes/i));
-      expect(screen.getByText(/my recipes/i)).toBeDefined()
-      expect(screen.queryByText(homepageText)).toBeNull()
-    })
-
   });
 });

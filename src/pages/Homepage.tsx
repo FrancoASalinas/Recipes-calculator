@@ -15,12 +15,6 @@ function Homepage() {
         <Link to='/new' className="border-2 border-nn rounded-full p-2 hover:scale-110 transition-all">
         New Recipe
         </Link>
-        <Link to='/myrecipes' className="p-2 group">
-        <span>
-        My Recipes
-        </span>
-        <div className="group-hover:w-full transition-all group-hover:visible h-[2px] invisible w-0 bg-nn"></div>
-        </Link>
       </div>
     </div>
   );
