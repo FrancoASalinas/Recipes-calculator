@@ -135,9 +135,9 @@ function NewRecipe() {
   function equalIngredientLists(a: any[], b: any[]) {
     function inequalIngredientsQuantitys(a: Ingredient, b: Ingredient) {
       if (
-        (Number(recipeInputs.newServes) * Number(a.quantity)) /
-          Number(recipeInputs.ogServes) !==
-        Number(b.quantity)
+       ( (Number(recipeInputs.newServes) * Number(a.quantity)) /
+          Number(recipeInputs.ogServes)).toFixed(2) !==
+        b.quantity
       ) {
         return true;
       } else return false;
@@ -231,7 +231,7 @@ function NewRecipe() {
       ...ingredients,
       {
         name: ingredientInputs.ingredientName.trim(),
-        quantity: ingredientInputs.ingredientQuantity.trim(),
+        quantity:ingredientInputs.ingredientQuantity.trim(),
         magnitude: ingredientInputs.ingredientMagnitude.trim(),
       },
     ]);
@@ -330,9 +330,9 @@ function NewRecipe() {
                 ingredients.map(ingredient => ({
                   ...ingredient,
                   quantity: `${
-                    (Number(recipeInputs.newServes) *
+                    ((Number(recipeInputs.newServes) *
                       Number(ingredient.quantity)) /
-                    Number(recipeInputs.ogServes)
+                    Number(recipeInputs.ogServes)).toFixed(2)
                   }`,
                 }))
               );
