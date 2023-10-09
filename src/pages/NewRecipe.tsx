@@ -17,6 +17,7 @@ function NewRecipe() {
     []
   );
   const [resizedTitle, setResizedTitle] = useState<string>('');
+  const [scrollToRecipe, setScrollToRecipe] = useState(false);
 
   const [ingredientInputs, setIngredientInputs] = useState<{
     ingredientName: string;
@@ -126,18 +127,23 @@ function NewRecipe() {
 
   useEffect(() => {
     checkErrors();
+    scrollOnRecipeCreation();
+  }, [ingredientInputs, recipeInputs, resizedIngredients]);
 
-    if (resizedIngredients.length > 0) {
+  function scrollOnRecipeCreation() {
+    if (scrollToRecipe === true) {
       resizedRecipeNameRef.current.scrollIntoView({ behavior: 'smooth' }), 1;
     }
-  }, [ingredientInputs, recipeInputs, resizedIngredients]);
+    setScrollToRecipe(false);
+  }
 
   function equalIngredientLists(a: any[], b: any[]) {
     function inequalIngredientsQuantitys(a: Ingredient, b: Ingredient) {
       if (
-       ( (Number(recipeInputs.newServes) * Number(a.quantity)) /
-          Number(recipeInputs.ogServes)).toFixed(2) !==
-        b.quantity
+        (
+          (Number(recipeInputs.newServes) * Number(a.quantity)) /
+          Number(recipeInputs.ogServes)
+        ).toFixed(2) !== b.quantity
       ) {
         return true;
       } else return false;
@@ -231,7 +237,7 @@ function NewRecipe() {
       ...ingredients,
       {
         name: ingredientInputs.ingredientName.trim(),
-        quantity:ingredientInputs.ingredientQuantity.trim(),
+        quantity: ingredientInputs.ingredientQuantity.trim(),
         magnitude: ingredientInputs.ingredientMagnitude.trim(),
       },
     ]);
@@ -329,13 +335,15 @@ function NewRecipe() {
               setResizedIngredients(
                 ingredients.map(ingredient => ({
                   ...ingredient,
-                  quantity: `${
-                    ((Number(recipeInputs.newServes) *
+                  quantity: `${(
+                    (Number(recipeInputs.newServes) *
                       Number(ingredient.quantity)) /
-                    Number(recipeInputs.ogServes)).toFixed(2)
-                  }`,
+                    Number(recipeInputs.ogServes)
+                  ).toFixed(2)}`,
                 }))
               );
+
+              setScrollToRecipe(true);
             }}
           >
             {resizedIngredients.length === 0 ? 'Create' : 'Update'}
